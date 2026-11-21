@@ -20,7 +20,7 @@ npm run dev   # http://localhost:3000
 ## Known limits
 
 - Sleeper exposes no projections, so the tracker shows actual scores only.
-- Sleeper doesn't document a "chopped" league flag. Leagues are tagged by name/settings heuristics, and elimination order is replayed from weekly scores (lowest surviving score is chopped), cross-checked against empty rosters.
+- Sleeper doesn't document its Chopped flag. Observed: `settings.type === 3` and `settings.last_chopped_leg`. Elimination order is replayed from weekly scores (lowest surviving score is chopped) and cross-checked against empty rosters; verified against a live 18-team league in Week 11, 2026.
 - `SLEEPER_API_BASE` env var can point the app at a mock API for testing.
 
 ## Deploy

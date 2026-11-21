@@ -33,8 +33,13 @@ export type LeagueSummary = {
   notes: string[];
 };
 
-/** Heuristic: Sleeper doesn't document a "chopped" flag, so check settings keys and the league name. */
+/**
+ * Sleeper marks Chopped leagues with settings.type === 3 (0 redraft, 1 keeper, 2 dynasty) and adds
+ * settings.last_chopped_leg. Undocumented, confirmed against a live league 2026-11-21.
+ */
 export function isLikelyChopped(league: SleeperLeague): boolean {
+  const s = league.settings ?? {};
+  if (Number(s.type) === 3 || s.last_chopped_leg != null) return true;
   if (/chop|guillotine/i.test(league.name)) return true;
   return Object.entries(league.settings ?? {}).some(
     ([key, value]) => /chop|guillotine|elim/i.test(key) && Boolean(value),

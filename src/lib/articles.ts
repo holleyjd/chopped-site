@@ -34,8 +34,8 @@ export function getAllArticles(): ArticleMeta[] {
     .readdirSync(DIR)
     .filter((f) => f.endsWith(".md"))
     .map((f) => {
-      const { html: _html, ...meta } = load(f);
-      return meta;
+      const { slug, title, description, date, readingMinutes } = load(f);
+      return { slug, title, description, date, readingMinutes };
     })
     .sort((a, b) => b.date.localeCompare(a.date));
 }

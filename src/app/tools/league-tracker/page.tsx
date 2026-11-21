@@ -93,7 +93,7 @@ async function Results({ searchParams }: { searchParams: PageProps<"/tools/leagu
         </ul>
       )}
       <p className="text-xs text-muted">
-        &ldquo;Chopped&rdquo; tags are a best guess from league settings and names. Any league can be opened.
+        Chopped leagues are detected from Sleeper&apos;s league type. Any league can be opened.
       </p>
     </div>
   );
