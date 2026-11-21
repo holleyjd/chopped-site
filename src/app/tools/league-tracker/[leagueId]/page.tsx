@@ -60,6 +60,8 @@ async function LeagueView({ params }: { params: PageProps<"/tools/league-tracker
   const alive = summary.teams.filter((t) => t.alive);
   const out = summary.teams.filter((t) => !t.alive);
   const lastWeek = completed.at(-1);
+  // Early in a week most teams sit at 0, so a live "bottom two" would be noise.
+  const liveMeaningful = live != null && alive.filter((t) => (t.liveScore ?? 0) > 0).length >= alive.length * 0.75;
 
   return (
     <div className="space-y-8">
@@ -86,7 +88,7 @@ async function LeagueView({ params }: { params: PageProps<"/tools/league-tracker
             <thead className="border-b border-border text-left text-xs uppercase tracking-wide text-muted">
               <tr>
                 <th className="px-4 py-3">Team</th>
-                {live != null && <th className="px-3 py-3 text-right">Wk {live} live</th>}
+                {live != null && <th className="px-3 py-3 text-right">Wk {live} so far</th>}
                 <th className="px-3 py-3 text-right">Wk {lastWeek ?? "–"}</th>
                 <th className="px-3 py-3 text-right">Above cut</th>
                 <th className="px-3 py-3 text-right">Avg</th>
@@ -96,7 +98,7 @@ async function LeagueView({ params }: { params: PageProps<"/tools/league-tracker
             </thead>
             <tbody>
               {alive.map((t, i) => (
-                <AliveRow key={t.rosterId} team={t} showLive={live != null} inDanger={live != null && i >= alive.length - 2} />
+                <AliveRow key={t.rosterId} team={t} showLive={live != null} inDanger={liveMeaningful && i >= alive.length - 2} />
               ))}
             </tbody>
           </table>
@@ -104,7 +106,7 @@ async function LeagueView({ params }: { params: PageProps<"/tools/league-tracker
         <p className="text-xs text-muted">
           &ldquo;Above cut&rdquo; is how far each team finished above the lowest surviving score last week.
           &ldquo;Share&rdquo; is each team&apos;s cut of the FAAB still held by surviving teams.
-          {live != null && " Red rows are the bottom two in live scoring this week."}
+          {liveMeaningful && " Red rows are the bottom two in live scoring this week."}
         </p>
       </section>
 

@@ -56,12 +56,17 @@ export type NflState = {
 };
 
 async function get<T>(path: string): Promise<T | null> {
-  const res = await fetch(`${BASE}${path}`, {
-    headers: { Accept: "application/json" },
-  });
-  if (!res.ok) return null;
-  // Sleeper returns a literal `null` body for unknown users/leagues.
-  return (await res.json()) as T | null;
+  try {
+    const res = await fetch(`${BASE}${path}`, {
+      headers: { Accept: "application/json" },
+    });
+    if (!res.ok) return null;
+    // Sleeper returns a literal `null` body for unknown users/leagues.
+    return (await res.json()) as T | null;
+  } catch (err) {
+    console.error(`Sleeper request failed: ${path}`, err);
+    return null;
+  }
 }
 
 export async function getNflState(): Promise<NflState | null> {
